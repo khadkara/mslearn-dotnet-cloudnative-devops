@@ -37,7 +37,12 @@ jobs:
           login-server: acseshop126045500.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-          
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t acseshop126045500.azurecr.io/productservice:${{ github.sha }} -f ./DockerfileProducts.acr .
+          docker push acseshop126045500.azurecr.io/productservice:${{ github.sha }}
+
   deploy:
       permissions:
         actions: read
@@ -79,8 +84,5 @@ jobs:
             images: |
               ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
             pull-images: false
-  
-        - name: Build and Push Docker Image
-          run: |
-            docker build -t acseshop126045500.azurecr.io/productservice:${{ github.sha }} -f ./DockerfileProducts.acr .
-            docker push acseshop126045500.azurecr.io/productservice:${{ github.sha }}
+
+    
